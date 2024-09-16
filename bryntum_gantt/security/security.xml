@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="bryntum_gantt_project_by_company" model="ir.rule">
+            <field name="name">Project: project multi-company</field>
+            <field name="model_id" ref="model_project_project"/>
+            <field name="domain_force">
+                [('company_id', 'in', company_ids + [False])]
+            </field>
+        </record>
+    </data>
+</odoo>

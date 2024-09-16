@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="res_config_settings_view_form" model="ir.ui.view">
+    <field name="name">res.config.settings.view.form.inherit.bryntum</field>
+    <field name="model">res.config.settings</field>
+    <field name="priority" eval="50"/>
+    <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div class="app_settings_block" data-string="Gantt View Pro" string="Gantt View Pro" data-key="bryntum_gantt" groups="project.group_project_manager">
+                <h2>Gantt View Pro Management</h2>
+                <div class="row mt16 o_settings_container" id="gantt_view_pro_management">
+                    <div id="use_auto_scheduling" class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="bryntum_auto_scheduling"/>
+                        </div>
+                        <div class="o_setting_right_pane" name="pad_project_right_pane">
+                            <label for="bryntum_auto_scheduling"/>
+                            <div class="text-muted">
+                                Auto schedule tasks
+                            </div>
+                        </div>
+                    </div>
+                    <div id="user_assignment" class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="bryntum_user_assignment"/>
+                        </div>
+                        <div class="o_setting_right_pane" name="pad_project_right_pane">
+                            <label for="bryntum_user_assignment"/>
+                            <div class="text-muted">
+                                Use user table as resource base (default resources)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="readonly_projects" class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="bryntum_readonly_projects"/>
+                        </div>
+                        <div class="o_setting_right_pane" name="pad_project_right_pane">
+                            <label for="bryntum_readonly_projects"/>
+                            <div class="text-muted">
+                                Set the GanttView readonly
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="save_wbs" class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="bryntum_save_wbs"/>
+                        </div>
+                        <div class="o_setting_right_pane" name="pad_project_right_pane">
+                            <label for="bryntum_save_wbs"/>
+                            <div class="text-muted">
+                                Save WBS values
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="use_gantt_config" class="col-12 col-lg-6 o_setting_box">
+                        <label for="bryntum_gantt_config"/>
+                        <field height="250" name="bryntum_gantt_config" class="gantt_config"/>
+                        <div class="text-muted">
+                            A valid JSON configuration object for the gantt view
+                        </div>
+                    </div>
+                    <div id="use_calendar_config" class="col-12 col-lg-6 o_setting_box">
+                        <label for="bryntum_calendar_config"/>
+                        <field height="250" name="bryntum_calendar_config" class="gantt_config"/>
+                        <div class="text-muted">
+                            An optional valid JSON configuration for the project calendar
+                        </div>
+                    </div>
+                    <div id="default_calendar" class="col-12 col-lg-6 o_setting_box">
+                        <label for="bryntum_default_calendar"/>
+                        <field width="250" name="bryntum_default_calendar"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </field>
+</record>
+
+</odoo>
+

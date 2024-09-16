@@ -1,0 +1,162 @@
+<odoo>
+    <data>
+        <record id="bryntum_gantt__view_form" model="ir.ui.view">
+            <field name="name">bryntum_gantt_view_form</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <BryntumGantt></BryntumGantt>
+            </field>
+        </record>
+
+        <record id="open_gantt_pro" model="ir.actions.act_window">
+            <field name="name">Gantt View Pro</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">BryntumGantt</field>
+        </record>
+
+        <menuitem name="Gantt View Pro" id="menu_bryntum_gantt_pro" parent="project.menu_main_pm"
+                  sequence="3" action="open_gantt_pro"
+                  groups="project.group_project_user,project.group_project_manager,base.group_user"/>
+
+        <record id="project.act_project_project_2_project_task_all" model="ir.actions.act_window">
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity,BryntumGantt</field>
+        </record>
+
+        <record id="project.action_view_task" model="ir.actions.act_window">
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,BryntumGantt,activity</field>
+        </record>
+
+        <record id="project_task_view_form" model="ir.ui.view">
+            <field name="name">project_task_view_form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/sheet/group/group" position="replace">
+                    <group>
+                        <field name="active" invisible="1"/>
+                        <field name="project_id" placeholder="Private" domain="[('active', '=', True), ('company_id', '=', company_id)]" attrs="{'invisible': [('parent_id', '!=', False)]}" widget="project_private_task"/>
+                        <field name="display_project_id" string="Project" attrs="{'invisible': [('parent_id', '=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
+                        <field name="milestone_id" placeholder="e.g. Product Launch" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id}" attrs="{'invisible': ['|', ('project_id', '=', False), ('allow_milestones', '=', False)]}"/>
+                        <field name="user_ids" class="o_task_user_field" options="{'no_open': True, 'no_quick_create': True}" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
+                        <field name="partner_id" widget="res_partner_many2one" class="o_task_customer_field"/>
+                        <field name="partner_phone" widget="phone" attrs="{'invisible': True}"/>
+                        <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
+                        <field name="miscellaneous" readonly="1"/>
+                        <field name="budget" invisible="0"/>
+                        <field name="actual_budget" invisible="0"/>
+                        <field name="is_project" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                    </group>
+                </xpath>
+                <xpath expr="//form/sheet/group/group[last()]" position="replace">
+                    <group>
+                        <label for="planned_date_begin" string="Planned Date" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}"/>
+                            <div class="w-100" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}">
+                            <div class="o_row">
+                                <field name="planned_date_begin" widget="daterange" options="{'related_end_date': 'planned_date_end'}"/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('planned_date_begin', '=', False), ('planned_date_end', '=', False)]}"/>
+                                <field name="planned_date_end" widget="daterange" options="{'related_start_date': 'planned_date_begin'}"/>
+                            </div>
+                        </div>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="planned_date_begin" attrs="{'required': [('planned_date_end', '!=', False)]}"/>
+                    <field name="planned_date_end" attrs="{'required': [('planned_date_begin', '!=', False)]}"/>
+                    <field name="completed_date"/>
+                    <field name="percent_done"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="sale_order_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="owner" readonly="1"/>
+                    <field name="participant" readonly="1"/>
+                    <field name="project_closed"/>
+<!--                    <field name="project_color"/>-->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_tree" model="ir.ui.view">
+            <field name="name">project_task_view_tree</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="employee_ids" optional="show" widget="many2many_avatar_user"/>
+                    <field name="percent_done"/>
+                    <field name="assigned_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_edit_project_inherit_form" model="ir.ui.view">
+            <field name="name">project.project.view.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//field[@name='tag_ids']" position="after">-->
+<!--                    <field name="type_ids" widget="many2many_tags"/>-->
+<!--                </xpath>-->
+
+                <xpath expr="//div[hasclass('oe_title')]" position="after">
+                    <div name="project_start_date">
+                        <div>
+                            <label for="project_start_date" class="oe_inline" string="Project start:"/>
+                            <field name="project_start_date" class="oe_inline oe_input_align"/>
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//page[@name='settings']" position="inside">
+                    <div class="row mt16 o_settings_container" id="gantt_view_pro_management">
+                        <div id="use_collaborative_pad" class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="bryntum_auto_scheduling"/>
+                            </div>
+                            <div class="o_setting_right_pane" name="pad_project_right_pane">
+                                <label for="bryntum_auto_scheduling"/>
+                                <div class="text-muted">
+                                    Auto schedule tasks
+                                </div>
+                            </div>
+                        </div>
+                        <div id="use_collaborative_pad" class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="bryntum_user_assignment"/>
+                            </div>
+                            <div class="o_setting_right_pane" name="pad_project_right_pane">
+                                <label for="bryntum_user_assignment"/>
+                                <div class="text-muted">
+                                    Use user table as resource base
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <record id="make_invisible" model="res.groups">
+            <field name="name">Invisible</field>
+        </record>
+
+        <record model="ir.ui.menu" id="project.menu_projects">
+            <field name="name">Record to hide menu"</field>
+            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+        </record>
+
+        <record model="ir.ui.menu" id="project.menu_project_management">
+            <field name="name">Record to hide menu"</field>
+            <field name="groups_id" eval="[(6,0,[ref('make_invisible')])]"/>
+        </record>
+
+        <menuitem name="Project"
+            id="project.menu_main_pm"
+            action="project.open_view_project_all_config"
+            groups="project.group_project_manager,project.group_project_user"
+            web_icon="project,static/description/icon.svg"
+            sequence="70"/>
+
+<!--        <menuitem action="project.open_view_project_all_config" id="project.menu_projects_config" name="Projects" parent="project.menu_main_pm" sequence="1"/>-->
+    </data>
+</odoo>

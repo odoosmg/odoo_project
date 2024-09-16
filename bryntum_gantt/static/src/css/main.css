@@ -1,0 +1,9 @@
+.gantt_config {
+    height: 250px !important;
+    border-style: solid !important;
+    overflow-y: auto !important;
+}
+
+#bryntum-gantt {
+    height: 100% !important;
+}
